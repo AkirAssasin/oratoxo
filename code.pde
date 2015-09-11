@@ -78,7 +78,7 @@ void draw() {
 
 void timeStep(toMove) {
   if (random(1) > 0.9) {
-    slimes.add(new Slime());
+    //slimes.add(new Slime());
   }
   for (int i=arrows.size()-1; i>=0; i--) {
     Particle ar = (Arrow) arrows.get(i);
