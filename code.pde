@@ -135,9 +135,10 @@ class Slime {
     float ty;
     float r;
     float s;
-    float sp = 1;
+    float sp;
 
     Slime() {
+      sp = 0;
       s = random(100);
       switch(round(random(3))) {
         case 0:
@@ -157,8 +158,6 @@ class Slime {
           x = width + s;
           break;
       }
-      x = ox;
-      y = oy;
       tx = px;
       ty = py;
       r = atan2(ty - y, tx - x) / PI * 180;
