@@ -169,6 +169,7 @@ class Slime {
       translate(x,y);
       rotate(r/180*PI); 
       fill(0,255*(hp/s));
+      stroke(0,0);
       rect(-s,-s,s,s); 
       rotate(-r/180*PI); 
       translate(-x,-y);
@@ -180,14 +181,19 @@ class Slime {
       if (dist(x,y,tx,ty) < s) {
         tx = px;
         ty = py;
+        sp = 0;
       } 
-      x += cos(r/180*PI);
-      y += sin(r/180*PI);
+      if (dist(x,y,px,py) < s) {
+        hp -= 1;
+      } 
+      x += cos(r/180*PI)*sp;
+      y += sin(r/180*PI)*sp;
       for (int i=arrows.size()-1; i>=0; i--) {
         Particle ar = (Arrow) arrows.get(i);
         if (dist(x,y,ar.x,ar.y) < s) {
           hp -= 10;
           sp = 0;
+          arrows.remove(i);
         }
       }
     }
