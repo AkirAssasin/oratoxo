@@ -26,7 +26,6 @@ void setup() {
     slimes = new ArrayList();
     textFont(myfont);
     //document.documentElement.webkitRequestFullScreen();
-    slimes.add(new Slime(100,random(width),random(height)));
 }
 
  
@@ -78,13 +77,20 @@ void draw() {
 }
 
 void timeStep(toMove) {
+  for (random(1) > 0.9) {
+    slimes.add(new Slime());
+  }
   for (int i=arrows.size()-1; i>=0; i--) {
     Particle ar = (Arrow) arrows.get(i);
     ar.update();
+    if (ar.x < 0 || ar.y < 0 || ar.x > width || ar.y > height) {arrows.remove(i);}
   }
   for (int i=slimes.size()-1; i>=0; i--) {
     Particle s = (Slime) slimes.get(i);
     s.update();
+    if (s.s <= 0) {
+      slimes.remove(i);
+    }
   }
   if (toMove) {
     px += cos(pr/180*PI);
@@ -125,31 +131,62 @@ class Arrow {
 class Slime {
     float x;
     float y;
+    float tx;
+    float ty;
     float r;
     float s;
+    float sp = 1;
 
-    Slime(os,ox,oy) {
-      s = os;
+    Slime() {
+      s = random(100);
+      switch(round(random(3))) {
+        case 0:
+          x = random(width);
+          y = -s;
+          break;
+        case 1:
+          x = random(width);
+          y = height + s;
+          break;
+        case 2:
+          y = random(height);
+          x = -s;
+          break;
+        case 3:
+          y = random(height);
+          x = width + s;
+          break;
+      }
       x = ox;
       y = oy;
-      
+      tx = px;
+      ty = py;
+      r = atan2(ty - y, tx - x) / PI * 180;
     }
 
     void draw() {
-      ellipse(x,y,s,s); 
+      translate(x,y);
+      rotate(r/180*PI); 
+      rect(-s,-s,s,s); 
+      rotate(-r/180*PI); 
+      translate(-x,-y);
     }
 
     void update() {
-      r = atan2(py - y, px - x) / PI * 180;
+    sp += (1 - sp)/10;
+      r = atan2(ty - y, tx - x) / PI * 180;
+      if (dist(x,y,tx,ty) < s) {
+        tx = px;
+        ty = py;
+      } 
       x += cos(r/180*PI);
       y += sin(r/180*PI);
       for (int i=arrows.size()-1; i>=0; i--) {
         Particle ar = (Arrow) arrows.get(i);
-        if (dist(ar.x,ar.y,x,y) <= s/2) {
-          slimes.add(new Slime(s/2,ar.x,ar.y));
-          s /= 2;
-          arrows.remove(i);
-        } 
+        if (dist(x,y,ar.x,ar.y) < s) {
+          s -= 10;
+          sp = 0;
+        }
       }
     }
 }
