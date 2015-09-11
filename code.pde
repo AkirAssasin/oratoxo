@@ -140,7 +140,7 @@ class Slime {
 
     Slime() {
       sp = 0;
-      s = random(100);
+      s = (random(90) % 10) + 10;
       hp = s;
       switch(round(random(3))) {
         case 0:
@@ -176,7 +176,7 @@ class Slime {
     }
 
     void update() {
-    sp += (1 - sp)/10;
+    sp += (1 - sp)/s;
       r = atan2(ty - y, tx - x) / PI * 180;
       if (dist(x,y,tx,ty) < s/2) {
         tx = px;
