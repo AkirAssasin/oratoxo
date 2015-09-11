@@ -183,6 +183,10 @@ class Slime {
         ty = py;
         sp = 0;
       } 
+      if (dist(x,y,px,py) < s) {
+        tx = px;
+        ty = py;
+      }
       if (dist(x,y,px,py) < s/2) {
         hp -= 1;
       } 
@@ -193,7 +197,6 @@ class Slime {
         if (dist(x,y,ar.x,ar.y) < s/2) {
           hp -= 25;
           sp = 0;
-          arrows.remove(i);
         }
       }
     }
