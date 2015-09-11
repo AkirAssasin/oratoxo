@@ -77,7 +77,7 @@ void draw() {
 }
 
 void timeStep(toMove) {
-  for (random(1) > 0.9) {
+  if (random(1) > 0.9) {
     slimes.add(new Slime());
   }
   for (int i=arrows.size()-1; i>=0; i--) {
