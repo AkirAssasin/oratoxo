@@ -88,7 +88,7 @@ void timeStep(toMove) {
   for (int i=slimes.size()-1; i>=0; i--) {
     Particle s = (Slime) slimes.get(i);
     s.update();
-    if (s.s <= 0) {
+    if (s.hp <= 0) {
       slimes.remove(i);
     }
   }
@@ -136,10 +136,12 @@ class Slime {
     float r;
     float s;
     float sp;
+    float hp;
 
     Slime() {
       sp = 0;
       s = random(100);
+      hp = s;
       switch(round(random(3))) {
         case 0:
           x = random(width);
@@ -166,6 +168,7 @@ class Slime {
     void draw() {
       translate(x,y);
       rotate(r/180*PI); 
+      fill(0,255*(hp/s));
       rect(-s,-s,s,s); 
       rotate(-r/180*PI); 
       translate(-x,-y);
@@ -183,7 +186,7 @@ class Slime {
       for (int i=arrows.size()-1; i>=0; i--) {
         Particle ar = (Arrow) arrows.get(i);
         if (dist(x,y,ar.x,ar.y) < s) {
-          s -= 10;
+          hp -= 10;
           sp = 0;
         }
       }
