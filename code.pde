@@ -77,7 +77,7 @@ void draw() {
 }
 
 void timeStep(toMove) {
-  if (random(1) > 0.99) {
+  if (random(1) > 0.995) {
     slimes.add(new Slime());
   }
   for (int i=arrows.size()-1; i>=0; i--) {
@@ -140,7 +140,7 @@ class Slime {
 
     Slime() {
       sp = 0;
-      s = (random(90) % 10) + 10;
+      s = (random(100) % 25) + 25;
       hp = s;
       switch(round(random(3))) {
         case 0:
@@ -191,7 +191,7 @@ class Slime {
       for (int i=arrows.size()-1; i>=0; i--) {
         Particle ar = (Arrow) arrows.get(i);
         if (dist(x,y,ar.x,ar.y) < s/2) {
-          hp -= 10;
+          hp -= 25;
           sp = 0;
           arrows.remove(i);
         }
