@@ -170,7 +170,7 @@ class Slime {
       rotate(r/180*PI); 
       fill(0,255*(hp/s));
       stroke(0,0);
-      rect(-s,-s,s,s); 
+      rect(-s/2,-s/2,s,s); 
       rotate(-r/180*PI); 
       translate(-x,-y);
     }
@@ -178,19 +178,19 @@ class Slime {
     void update() {
     sp += (1 - sp)/10;
       r = atan2(ty - y, tx - x) / PI * 180;
-      if (dist(x,y,tx,ty) < s) {
+      if (dist(x,y,tx,ty) < s/2) {
         tx = px;
         ty = py;
         sp = 0;
       } 
-      if (dist(x,y,px,py) < s) {
+      if (dist(x,y,px,py) < s/2) {
         hp -= 1;
       } 
       x += cos(r/180*PI)*sp;
       y += sin(r/180*PI)*sp;
       for (int i=arrows.size()-1; i>=0; i--) {
         Particle ar = (Arrow) arrows.get(i);
-        if (dist(x,y,ar.x,ar.y) < s) {
+        if (dist(x,y,ar.x,ar.y) < s/2) {
           hp -= 10;
           sp = 0;
           arrows.remove(i);
