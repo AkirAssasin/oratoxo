@@ -195,7 +195,7 @@ class Slime {
       for (int i=arrows.size()-1; i>=0; i--) {
         Particle ar = (Arrow) arrows.get(i);
         if (dist(x,y,ar.x,ar.y) < s/2) {
-          hp -= 25;
+          hp -= 5;
           sp = 0;
         }
       }
