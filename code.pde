@@ -1,4 +1,4 @@
-/* @pjs font='fonts/font.ttf' */ 
+/* @pjs font='fonts/font.ttf'; globalKeyEvents="true"; */ 
 
 var myfont = loadFont("fonts/font.ttf"); 
 
@@ -51,11 +51,10 @@ void setup() {
     obg = color(0,0,150);
     gbg = color((red(obg) + green(obg) + blue(obg))/3);
     cbg = gbg;
-    decors.add(new Decor(width/2,height/2,"Time is what we want most, but what we use worst.",width/50));
+    decors.add(new Decor(width/2,height/2,"Time is what we want most, but what we use worst.",width/30));
     decors.add(new Decor(width/2,height/2 + width/50,"Time moves when you do. Click to shoot.",width/60));
     decors.add(new Decor(width/2,height/2 + width/50 + width/60,"The further your mouse, the faster you run,",width/60));
     decors.add(new Decor(width/2,height/2 + width/50 + width/30,"the slower you reload. Pick up arrows by going near them.",width/60));
-    //document.documentElement.webkitRequestFullScreen();
 }
 
  
@@ -78,12 +77,13 @@ void draw() {
     pwidth = width;
     pheight = height;
     
-    fill(icbg);
+    fill(255);
     textAlign(CENTER,TOP);
-    textSize(width/20);
+    textSize(width/30);
     text(pa + " arrows left",width/2,0);
-    prs = dist(mouseX,mouseY,px,py)/dist(0,0,px,py);
-    
+    if (pa > 0) {
+      prs = dist(mouseX,mouseY,px,py)/dist(0,0,px,py);
+    } else {prs = 1;}
     translate(px + sdp*5,py + 5);  
     rotate(pr/180*PI); 
     strokeWeight(5);
@@ -112,7 +112,7 @@ void draw() {
     if (prs < 0.05) {
       strokeWeight(1);
       stroke(red(icbg),green(icbg),blue(icbg),255*(0.05 - prs)/0.05);
-      line(0,0,-(width/4)*(0.05 - prs)/0.05,0);
+      line(0,0,-100*(0.05 - prs)/0.05,0);
     }
     stroke(icbg);
     if (ps >= 0) {
@@ -134,7 +134,7 @@ void draw() {
       Particle s = (Slime) slimes.get(i);
       s.draw();
     }
-    if (mouseX != pmouseX || mouseY != pmouseY) {
+    if (mouseX != pmouseX || mouseY != pmouseY || (keyPressed && key != 'g')) {
       timeStep(true);
     } else {
       cbg = lerpColor(cbg,gbg,0.05);
@@ -142,17 +142,15 @@ void draw() {
     if (mousePressed) {
       timeStep(false);
       if (ps >= 25) {
-        if (pa > 1) {
+        if (pa >= 1) {
           pa -= 1;
-          ps = -5;
-        } else {
-          pa = 0;
-          ps = 0;
+          
         }
+        ps = -5;
         for(int i = 0; i < pk; i++) {
           arrows.add(new Arrow(px,py,mouseX + random(-(pk - 1)*2,(pk - 1)*2),mouseY + random(-(pk - 1)*2,(pk - 1)*2)));
         }
-        pk = max(1,pk-1);
+        if (pk > 1) {pk -= 1;}
       }
     }
 }
@@ -235,7 +233,7 @@ class Decor {
       textSize(s);
       fill(0,255*(scdp/1.3));
       textAlign(CENTER);
-      text(t,x + sdp*5,y + 5);
+      text(t,x + sdp*5,y + 2);
         
       fill(icbg);
       text(t,x,y); 
@@ -310,7 +308,7 @@ class Arrow {
       if (s > 0) {
         s -= h/10;
         s = max(0,s);
-      }
+      } else {k = 0;}
     }
 }
 
