@@ -55,6 +55,7 @@ void setup() {
     decors.add(new Decor(width/2,height/2 + width/50,"Time moves when you do. Click to shoot.",width/60));
     decors.add(new Decor(width/2,height/2 + width/50 + width/60,"The further your mouse, the faster you run,",width/60));
     decors.add(new Decor(width/2,height/2 + width/50 + width/30,"the slower you reload. Pick up arrows by going near them.",width/60));
+    noCursor();
 }
 
  
@@ -77,10 +78,11 @@ void draw() {
     pwidth = width;
     pheight = height;
     
-    fill(255);
-    textAlign(CENTER,TOP);
-    textSize(width/30);
-    text(pa + " arrows left",width/2,0);
+    for (int i = 0; i < pa; i++) {
+      stroke(icbg);
+      strokeWeight(3);
+      line(width/2 - pa*4 + i*8 + 5,10,width/2 - pa*4 + i*8 - 5,60);
+    }
     if (pa > 0) {
       prs = dist(mouseX,mouseY,px,py)/dist(0,0,px,py);
     } else {prs = 1;}
@@ -134,7 +136,7 @@ void draw() {
       Particle s = (Slime) slimes.get(i);
       s.draw();
     }
-    if (mouseX != pmouseX || mouseY != pmouseY || (keyPressed && key != 'g')) {
+    if (mouseX != pmouseX || mouseY != pmouseY || (keyPressed && key == ' ')) {
       timeStep(true);
     } else {
       cbg = lerpColor(cbg,gbg,0.05);
@@ -153,6 +155,15 @@ void draw() {
         if (pk > 1) {pk -= 1;}
       }
     }
+    translate(mouseX,mouseY);
+    rotate(pr/180*PI);
+    strokeWeight(2);
+    stroke(cbg);
+    fill(icbg);
+    triangle(-10,-6,-10,6,10,0);
+    if (prs > 0.5) {triangle(-20*prs,-12*prs,-20*prs,12*prs,20*prs,0*prs);}
+    rotate(-pr/180*PI); 
+    translate(-mouseX,-mouseY);
 }
 
 void timeStep(toMove) {
@@ -321,12 +332,14 @@ class Slime {
     float s;
     float sp;
     float hp;
+    float decay;
     boolean flee;
 
     Slime(of) {
       flee = of;
       sp = 0;
       s = random(25,100);
+      decay = 0;
       hp = s;
       switch(round(random(3))) {
         case 0:
@@ -366,7 +379,7 @@ class Slime {
       rotate(r/180*PI); 
       fill(icbg,255*(hp/s));
       stroke(0,0);
-      rect(-s/2,-s/2,s,s); 
+      rect(-s/2,-s/2,s,s,s-hp); 
       rotate(-r/180*PI); 
       translate(-x,-y);
       x *= width/pwidth;
@@ -374,6 +387,12 @@ class Slime {
     }
 
     void update() {
+      if (decay < 300) {
+        if (x < -s/2 || x > width + s/2 || y < -s/2 || x > height + s/2)
+        decay += 0.1;
+      } else {
+        hp = 0;
+      } 
       sp += (1*((100-s)/100) - sp)/s;
       r = atan2(ty - y, tx - x) / PI * 180;
       if (dist(x,y,tx,ty) < s/2) {
